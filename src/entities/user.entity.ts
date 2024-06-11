@@ -1,8 +1,15 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, ManyToMany, Collection } from '@mikro-orm/core';
 import { v4 } from 'uuid';
+import { Organization } from './organization.entity';
 
 @Entity()
 export class User {
+  constructor(firstName: string, lastName: string) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.fullName = `${firstName} ${lastName}`
+  }
+
   @PrimaryKey()
   id: string = v4();
 
@@ -11,6 +18,9 @@ export class User {
 
   @Property()
   lastName: string;
+
+  @Property()
+  fullName: string;
 
   @Property({ unique: true })
   email: string;
@@ -29,4 +39,7 @@ export class User {
 
   @Property()
   ipAddress: string;
+
+  @ManyToMany(() => Organization, organization => organization.employeeAdmins)
+  organizations = new Collection<Organization>(this);
 }

@@ -5,9 +5,8 @@ import { User } from 'src/entities/user.entity';
 
 async function seed() {
   const orm = await MikroORM.init(config);
-  const userRepository = orm.em.getRepository(User);
-  const organizationRepository = orm.em.getRepository(Organization);
-
+  const em = orm.em.fork();
+  
   const users = [
     { firstName: 'Rich', lastName: 'Eisen', email: 'rich@richeisenshow.com' },
     { firstName: 'Pat', lastName: 'McAfee', email: 'pat@patmcafeeshow.com' },
@@ -15,19 +14,19 @@ async function seed() {
   ];
 
   for (const user of users) {
-    const newUser = userRepository.create(user);
-    await userRepository.persistAndFlush(newUser);
+    const newUser = em.create(User, user);
+    await em.persistAndFlush(newUser);
   }
 
   const organizations = [
-    { name: 'Rich Eisen Show', owner: await userRepository.findOne({ email: 'rich@richeisenshow.com' }), type: 'Show' },
-    { name: 'Pat McAfee Show', owner: await userRepository.findOne({ email: 'pat@patmcafeeshow.com' }), type: 'Show' },
+    { name: 'Rich Eisen Show', owner: await em.findOne(User, { email: 'rich@richeisenshow.com' }), type: 'Sports' },
+    { name: 'Pat McAfee Show', owner: await em.findOne(User, { email: 'pat@patmcafeeshow.com' }), type: 'Sports' },
     // Add more organizations as needed
   ];
 
   for (const organization of organizations) {
-    const newOrganization = organizationRepository.create(organization);
-    await organizationRepository.persistAndFlush(newOrganization);
+    const newOrganization = em.create(Organization, organization);
+    await em.persistAndFlush(newOrganization);
   }
 
   await orm.close(true);

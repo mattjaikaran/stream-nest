@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, ManyToOne, ManyToMany, Collection } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, Collection, OneToOne, OneToMany } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import { User } from './user.entity';
 
@@ -10,13 +10,10 @@ export class Organization {
   @Property()
   name: string;
 
-  @ManyToOne()
+  @OneToOne()
   owner: User;
 
-  @ManyToMany(() => User, 'organizations')
-  employeeAdmins = new Collection<User>(this);
-
-  @ManyToMany(() => User, 'organizations')
+  @OneToMany(() => User, user => user.id)
   employees = new Collection<User>(this);
 
   @Property()

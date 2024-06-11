@@ -49,6 +49,12 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
+## ORM
+```bash
+# see all available options
+$ npx mikro-orm
+```
+
 
 ## Postgres commands
 ```bash

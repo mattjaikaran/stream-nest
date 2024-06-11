@@ -3,6 +3,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/core';
 import { Organization } from 'src/entities/organization.entity';
 import { User } from 'src/entities/user.entity';
+import { EntityManager } from '@mikro-orm/postgresql';
 
 @Injectable()
 export class OrganizationService {
@@ -11,6 +12,7 @@ export class OrganizationService {
     private readonly organizationRepository: EntityRepository<Organization>,
     @InjectRepository(User)
     private readonly userRepository: EntityRepository<User>,
+    private readonly em: EntityManager,
   ) {}
 
   async createOrganization(organization: Partial<Organization>): Promise<Organization> {
@@ -19,7 +21,7 @@ export class OrganizationService {
       throw new Error('Owner not found');
     }
     const newOrganization = this.organizationRepository.create({ ...organization, owner });
-    await this.organizationRepository.persistAndFlush(newOrganization);
+    await this.em.persistAndFlush(newOrganization);
     return newOrganization;
   }
 
@@ -42,7 +44,7 @@ export class OrganizationService {
         organization.owner = owner;
       }
       this.organizationRepository.assign(existingOrganization, organization);
-      await this.organizationRepository.persistAndFlush(existingOrganization);
+      await this.em.persistAndFlush(existingOrganization);
       return existingOrganization;
     }
     return null;
@@ -51,7 +53,7 @@ export class OrganizationService {
   async deleteOrganization(id: string): Promise<void> {
     const organization = await this.organizationRepository.findOne(id);
     if (organization) {
-      await this.organizationRepository.removeAndFlush(organization);
+      await this.em.removeAndFlush(organization);
     }
   }
 }
