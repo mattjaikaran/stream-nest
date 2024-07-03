@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    "module": "Node16",
-    "target": "ES2022",
+    "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true, // might not need.
+    "target": "ES2021",
     "sourceMap": true,
-    "strict": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
@@ -18,10 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-  },
-  "ts-node": {
-    "esm": true,
-    "transpileOnly": true
+    "noFallthroughCasesInSwitch": false
   }
 }
